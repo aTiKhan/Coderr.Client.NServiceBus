@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coderr.Client.NServiceBus", "Coderr.Client.NServiceBus\Coderr.Client.NServiceBus.csproj", "{761632C9-76ED-403F-AF0D-3A7B9563F351}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Demo", "NServiceBus.Demo\NServiceBus.Demo.csproj", "{7DD86FBB-DD84-4EF4-975D-A108F3AE6E60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{761632C9-76ED-403F-AF0D-3A7B9563F351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{761632C9-76ED-403F-AF0D-3A7B9563F351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{761632C9-76ED-403F-AF0D-3A7B9563F351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{761632C9-76ED-403F-AF0D-3A7B9563F351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DD86FBB-DD84-4EF4-975D-A108F3AE6E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DD86FBB-DD84-4EF4-975D-A108F3AE6E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DD86FBB-DD84-4EF4-975D-A108F3AE6E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DD86FBB-DD84-4EF4-975D-A108F3AE6E60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {138643E0-869B-4EE9-B65E-674DCDBE013D}
+	EndGlobalSection
+EndGlobal
