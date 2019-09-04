@@ -20,5 +20,7 @@ namespace Coderr.Client.NServiceBus
         public MessageMetadata Metadata { get; set; }
         public Type MessageType { get; set; }
         public bool IsHandled { get; set; }
+        public object HandlerInstance { get; set; }
+        public Type HandlerType { get; set; }
     }
 }

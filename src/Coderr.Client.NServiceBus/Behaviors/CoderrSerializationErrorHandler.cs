@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coderr.Client.Config;
+using Coderr.Client.ContextCollections;
 using Coderr.Client.Processor;
 using NServiceBus.Pipeline;
 
@@ -9,11 +10,19 @@ namespace Coderr.Client.NServiceBus.Behaviors
     public class CoderrSerializationErrorHandler : Behavior<ITransportReceiveContext>
     {
         private readonly ExceptionProcessor _processor;
+        private DuplicateDetector _duplicateDetector;
 
         public CoderrSerializationErrorHandler(CoderrConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             _processor = new ExceptionProcessor(configuration);
+            _duplicateDetector = DuplicateDetector.Instance;
+        }
+        public CoderrSerializationErrorHandler(CoderrConfiguration configuration, DuplicateDetector duplicateDetector)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            _processor = new ExceptionProcessor(configuration);
+            _duplicateDetector = duplicateDetector;
         }
 
         public override async Task Invoke(ITransportReceiveContext context, Func<Task> next)
@@ -36,13 +45,21 @@ namespace Coderr.Client.NServiceBus.Behaviors
                     MessageId = context.Message.MessageId
                 };
 
+                ctx.AddHighlightedProperty("MessageHeaders", "MessageType");
+                ctx.AddHighlightedCollection("MessageBody");
+                ctx.AddTag("serialization");
+                ctx.AddTag("nservicebus");
+
                 _processor.Process(ctx);
                 throw;
             }
         }
 
-        private static bool EnsureNotReported(ITransportReceiveContext context)
+        private bool EnsureNotReported(ITransportReceiveContext context)
         {
+            if (!_duplicateDetector.Validate(context.Message.MessageId))
+                return false;
+
             if (!context.Extensions.TryGet(out CoderrSharedData data))
             {
                 data = new CoderrSharedData();

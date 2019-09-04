@@ -4,6 +4,7 @@ using System.Text;
 using Coderr.Client.ContextCollections;
 using Coderr.Client.Contracts;
 using Coderr.Client.Reporters;
+using NServiceBus;
 
 namespace Coderr.Client.NServiceBus.ContextProviders
 {
@@ -23,11 +24,22 @@ namespace Coderr.Client.NServiceBus.ContextProviders
                 props[pair.Key] = pair.Value;
             }
 
+            var messageType = ctx.MessageType?.FullName;
+            if (messageType == null)
+            {
+                if (ctx.MessageHeaders.TryGetValue(Headers.EnclosedMessageTypes, out var value))
+                {
+                    var pos = value.IndexOf(',');
+                    messageType = pos == -1 ? value : value.Substring(0, pos);
+                }
+            }
+
             props["MessageId"] = ctx.MessageId;
-            props["MessageType"] = ctx.MessageType.ToString();
             props["ReplyToAddress"] = ctx.ReplyToAddress;
             props["IsHandled"] = ctx.IsHandled.ToString();
-            
+            if (messageType != null)
+                props["MessageType"] = messageType;
+
             return new ContextCollectionDTO(Name, props);
         }
 

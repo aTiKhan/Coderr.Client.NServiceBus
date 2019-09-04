@@ -2,16 +2,26 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Coderr.Client.Config;
+using Coderr.Client.ContextCollections;
 using NServiceBus.Pipeline;
 
 namespace Coderr.Client.NServiceBus.Behaviors
 {
     public class CoderrErrorHandling : Behavior<IIncomingLogicalMessageContext>
     {
+        private DuplicateDetector _duplicateDetector;
+
         public CoderrErrorHandling(CoderrConfiguration configuration)
         {
-            
+            _duplicateDetector = DuplicateDetector.Instance;
         }
+
+        public CoderrErrorHandling(CoderrConfiguration configuration, DuplicateDetector detector)
+        {
+            _duplicateDetector = detector;
+        }
+
+
 
         public override async Task Invoke(IIncomingLogicalMessageContext context, Func<Task> next)
         {
@@ -22,10 +32,6 @@ namespace Coderr.Client.NServiceBus.Behaviors
                     .ConfigureAwait(false);
 
                 sw.Stop();
-                if (sw.Elapsed > CoderrSharedData.MaxExecutionTime)
-                {
-                    
-                }
             }
             catch (Exception ex)
             {
@@ -43,13 +49,20 @@ namespace Coderr.Client.NServiceBus.Behaviors
                     ReplyToAddress = context.ReplyToAddress
                 };
 
+                ctx.AddHighlightedProperty("MessageHandler", "Type");
+                ctx.AddHighlightedCollection("MessageBody");
+                ctx.AddTag("nservicebus");
+
                 Err.Report(ctx);
                 throw;
             }
         }
 
-        private static bool EnsureNotReported(IIncomingLogicalMessageContext context)
+        private bool EnsureNotReported(IIncomingLogicalMessageContext context)
         {
+            if (!_duplicateDetector.Validate(context.MessageId))
+                return false;
+
             if (!context.Extensions.TryGet(out CoderrSharedData data))
             {
                 data = new CoderrSharedData();
