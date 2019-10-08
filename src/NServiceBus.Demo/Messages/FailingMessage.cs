@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NServiceBus.Demo.Messages
 {
-    class FailingMessage
+    class FailingMessage : ICommand
     {
     }
 }

@@ -6,9 +6,10 @@ namespace NServiceBus.Demo.Endpoint1
 {
     class FailingMessageHandler : IHandleMessages<FailingMessage>
     {
-        public Task Handle(FailingMessage message, IMessageHandlerContext context)
+        public async Task Handle(FailingMessage message, IMessageHandlerContext context)
         {
-            throw new NotSupportedException("Incorrect handling");
+            await Task.Delay(1232);
+            await context.Publish(new MessageFailed());
         }
     }
 }

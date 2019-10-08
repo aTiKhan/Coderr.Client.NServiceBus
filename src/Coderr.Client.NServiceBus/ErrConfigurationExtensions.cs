@@ -21,11 +21,20 @@ namespace Coderr.Client
                 new CoderrSerializationErrorHandler(configuration),
                 "Reports serialization exceptions to Coderr");
 
-            configuration.ContextProviders.Add(new BodyProvider());
+            pipeline.Register(typeof(TrackSlowMessageHandlersBehavior), "Logs a warning if a handler take more than a specified time");
+
+
+            configuration.ContextProviders.Add(new MessageProvider());
             configuration.ContextProviders.Add(new HeadersProvider());
+            configuration.ContextProviders.Add(new HandlerProvider());
         }
 
-        public static void TrackSlowMessages(this CoderrConfiguration instance, TimeSpan maxExecutionTime)
+        /// <summary>
+        /// Report when handlers take a long time to process a message.
+        /// </summary>
+        /// <param name="instance">instance</param>
+        /// <param name="maxExecutionTime">Max duration</param>
+        public static void ReportSlowMessageHandlers(this CoderrConfiguration instance, TimeSpan maxExecutionTime)
         {
             CoderrSharedData.MaxExecutionTime = maxExecutionTime;
         }
