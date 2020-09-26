@@ -25,10 +25,7 @@ namespace Coderr.Client.NServiceBus.ContextProviders
                     props.Add(fieldInfo.Name, fieldInfo.GetValue(ctx.HandlerInstance)?.ToString() ?? "null");
             }
 
-            if (props.Count == 0)
-                return null;
-
-            return new ContextCollectionDTO(Name, props);
+            return props.Count == 0 ? null : new ContextCollectionDTO(Name, props);
         }
 
         public string Name { get; } = "MessageHandler";

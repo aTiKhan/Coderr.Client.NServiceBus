@@ -57,8 +57,8 @@ namespace Coderr.Client.NServiceBus.Behaviors
 
         private bool EnsureNotReported(ITransportReceiveContext context)
         {
-            if (!_duplicateDetector.Validate(context.Message.MessageId))
-                return false;
+            if (_duplicateDetector.Validate(context.Message.MessageId))
+                return true;
 
             if (!context.Extensions.TryGet(out CoderrSharedData data))
             {

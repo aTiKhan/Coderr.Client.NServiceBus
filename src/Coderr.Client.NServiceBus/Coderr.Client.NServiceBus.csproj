@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Coderr.Client.NetStd" Version="1.2.4" />
+    <PackageReference Include="Coderr.Client" Version="2.0.1" />
     <PackageReference Include="NServiceBus" Version="7.1.10" />
   </ItemGroup>
 
