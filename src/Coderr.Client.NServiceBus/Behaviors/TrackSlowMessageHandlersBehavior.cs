@@ -22,7 +22,7 @@ namespace Coderr.Client.NServiceBus.Behaviors
 
         private void ReportSlowMessageHandler(IInvokeHandlerContext context, TimeSpan elapsed)
         {
-            var ex = new SlowMessageHandlerException(context.MessageHandler.HandlerType.FullName, elapsed);
+            var ex = new SlowMessageHandlerException(context.MessageHandler.HandlerType.Name, elapsed);
             var ctx = new NServiceBusContext(this, ex)
             {
                 HandlerInstance = context.MessageHandler.Instance,

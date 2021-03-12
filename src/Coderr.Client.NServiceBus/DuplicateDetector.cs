@@ -9,8 +9,15 @@ namespace Coderr.Client.NServiceBus
         private readonly LinkedList<string> _messageIds = new LinkedList<string>();
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <returns><c>true</c> if it's NOT a duplicate; otherwise <c>false</c></returns>
         public bool Validate(string messageId)
         {
+            return true;
+
             if (_messageIds.Any(x => x == messageId))
                 return false;
 

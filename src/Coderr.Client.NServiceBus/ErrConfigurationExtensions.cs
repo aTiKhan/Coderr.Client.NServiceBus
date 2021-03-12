@@ -11,7 +11,7 @@ namespace Coderr.Client
     public static class ErrConfigurationExtensions
     {
         public static void RegisterCoderr(this EndpointConfiguration nServiceBusConfig,
-            CoderrConfiguration configuration)
+            CoderrConfiguration configuration = null)
         {
             var pipeline = nServiceBusConfig.Pipeline;
             pipeline.Register(
@@ -20,9 +20,14 @@ namespace Coderr.Client
             pipeline.Register(
                 new CoderrSerializationErrorHandler(configuration),
                 "Reports serialization exceptions to Coderr");
+            pipeline.Register(
+                typeof(TrackSlowMessageHandlersBehavior), 
+                "Logs a warning if a handler take more than a specified time");
 
-            pipeline.Register(typeof(TrackSlowMessageHandlersBehavior), "Logs a warning if a handler take more than a specified time");
-
+            if (configuration == null)
+            {
+                configuration = Err.Configuration;
+            }
 
             configuration.ContextProviders.Add(new MessageProvider());
             configuration.ContextProviders.Add(new HeadersProvider());
